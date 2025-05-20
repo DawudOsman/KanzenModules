@@ -1,0 +1,11 @@
+{
+  "sourceName": "MangaDex",
+  "iconURL":  "",
+  "version": 1.0,
+  "language": "English",
+  "scriptUrl":"",
+  "author":{
+    "name":"Churly",
+    "iconUrl":""
+  }
+}
