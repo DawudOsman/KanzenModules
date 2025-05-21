@@ -3,7 +3,7 @@
   "iconURL":  "",
   "version": 1.0,
   "language": "English",
-  "scriptUrl":"https://raw.githubusercontent.com/DawudOsman/KanzenModules/refs/heads/main/MangadexTest/mangaDex.js",
+  "scriptUrl":"https://raw.githubusercontent.com/DawudOsman/KanzenModules/main/MangadexTest/mangaDex.js",
   "author":{
     "name":"Churly",
     "iconUrl":"https://www.svgrepo.com/show/331479/mangadex-v2.svg"
