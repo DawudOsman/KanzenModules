@@ -3,7 +3,7 @@
     "iconUrl": "https://raw.githubusercontent.com/DawudOsman/KanzenModules/refs/heads/main/AsuraScans/icons/icon.jpg",
     "version": "1.0",
     "language": "English",
-    "scriptUrl": "",
+    "scriptUrl": "https://raw.githubusercontent.com/DawudOsman/KanzenModules/refs/heads/main/AsuraScans/AsuraScans.js",
     "author":
     {
         "name": "Churly",
