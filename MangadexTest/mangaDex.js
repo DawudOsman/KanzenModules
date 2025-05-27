@@ -1,8 +1,9 @@
 const apiUrl = "https://api.mangadex.org/"
 const baseUrl = "https://allmanga.to"
 
-async function searchContent(input,page) {
+async function searchContent(input,page=0) {
   try{
+
     const url = `${apiUrl}/manga?title=${input}&includes[]=cover_art&offset=${page*10 }`
     const response = await fetch(url)
     const json = await response.json()
