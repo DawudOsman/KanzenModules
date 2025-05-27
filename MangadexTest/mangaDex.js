@@ -21,7 +21,7 @@ async function searchContent(input) {
 function formatContent(rawData)
 {
   const id = rawData['id']
-  var imageURL = `https://uploads.mangadex.org/covers/${id}`
+  var imageURL = `https://mangadex.org/covers/${id}`
   // get Title
   var title = Object.entries(rawData['attributes']['title'])[0]
   if("en" in rawData['attributes']['title'])
