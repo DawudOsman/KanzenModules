@@ -21,6 +21,12 @@ async function searchContent(input,page=0) {
 
     
 }
+async function getContentData(href) {
+  console.print("href is ")
+  console.print(href)
+  return
+}
+// util Functions
 function formatContent(rawData)
 {
   
