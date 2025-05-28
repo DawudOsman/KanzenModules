@@ -22,9 +22,15 @@ async function searchContent(input,page=0) {
     
 }
 async function getContentData(href) {
-  console.print("href is ")
-  console.print(href)
-  return
+
+  try{
+    return href
+  }
+    catch (err)
+  {
+    return {'Error': err.message}
+  }
+  
 }
 // util Functions
 function formatContent(rawData)
@@ -86,4 +92,5 @@ function formatContent(rawData)
     return {'title':title,'id':id,'imageURL':imageURL}
 
 }
+//searchContent("bleach").then((x) => {getContentData(x[0]['id']).then(console.log)})
 
