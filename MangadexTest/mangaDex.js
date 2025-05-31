@@ -1,6 +1,8 @@
 const apiUrl = "https://api.mangadex.org/"
 const baseUrl = "https://allmanga.to"
-
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 async function searchContent(input,page=0) {
   try{
 
@@ -31,6 +33,67 @@ async function getContentData(href) {
     return {'Error': err.message}
   }
   
+}
+async function getChapters(input) {
+  var id = input['id']
+  var offset = 0
+  var limit = 100
+
+  var finished = false
+  var chapters = {}
+  while (!finished)
+  {
+
+   for (let i = 0; i < 3; i++) {
+      var url = `${apiUrl}chapter?manga=${id}&limit=${limit}&offset=${offset}&translatedLanguage[]=en&includes[]=scanlation_group&order[chapter]=asc`
+     
+        var response = await fetch(url)
+    var json = await response.json()
+    var data = json['data']
+        for (x of data)
+      {
+       
+                  if(x['attributes']['translatedLanguage'] && !(x['attributes']['translatedLanguage'] in chapters))
+          {
+            chapters[x['attributes']['translatedLanguage']] = {}
+          }
+
+            if(!(x['attributes']['chapter'] in chapters[x['attributes']['translatedLanguage']]))
+              {
+                chapters[x['attributes']['translatedLanguage']][x['attributes']['chapter']] = []
+
+              }
+              var translationGroup = "undefined"
+              for(y of x['relationships'])
+                {
+                  if(y['type'] == "scanlation_group")
+                    {
+                      translationGroup = y['attributes']['name']
+                    }
+                }
+                
+              chapters[x['attributes']['translatedLanguage']][x['attributes']['chapter']].push({'id':x['id'],'scanlation_group':translationGroup})
+          
+        
+        
+      }
+      if(data.length == 0){
+        finished = true
+      }
+       offset = offset + limit
+}
+
+
+      await sleep(1000)
+      console.log(url)
+     
+  }
+  for (const key in chapters)
+    {
+      chapters[key] = Object.entries(chapters[key])
+  .sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]));
+    }
+  return chapters
 }
 // util Functions
 function formatContent(rawData)
@@ -89,8 +152,8 @@ function formatContent(rawData)
    
 
     const id = {'id':rawData['id'],'description':description,'authorArtist':authorArtist,'tags':tags}
-    return {'title':title,'id':id,'imageURL':imageURL}
+    return {'title':title,'params':id,'imageURL':imageURL}
 
 }
-//searchContent("bleach").then((x) => {getContentData(x[0]['id']).then(console.log)})
+//searchContent("bouncer").then((x) => {console.log(x);getChapters(x[0]['params']).then(x =>(console.log(x['en'][0])))})
 
