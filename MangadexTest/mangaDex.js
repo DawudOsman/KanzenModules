@@ -95,6 +95,29 @@ async function getChapters(input) {
     }
   return chapters
 }
+async function getChapterImages(input)
+{
+  console.log(input)
+  try{
+    var serverUrl = `https://api.mangadex.org/at-home/server/${input}`
+    
+    var response = await fetch(serverUrl)
+    var json = await response.json()
+    var baseUrl = json["baseUrl"]
+    var hash = json["chapter"]["hash"]
+    var data = json["chapter"]["data"]
+    return data.map((x)=>
+      {
+        return `${baseUrl}/data/${hash}/${x}`
+      }
+  )
+    console.log(json)
+  }
+  catch(e){
+    console.log(e.message)
+    return []
+  }
+}
 // util Functions
 function formatContent(rawData)
 {
@@ -155,5 +178,5 @@ function formatContent(rawData)
     return {'title':title,'params':id,'imageURL':imageURL}
 
 }
-//searchContent("bouncer").then((x) => {console.log(x);getChapters(x[0]['params']).then(x =>(console.log(x['en'][0])))})
+//searchContent("shamo").then((x) => {console.log(x);getChapters(x[0]['params']).then(x => {console.log(x["en"][0][1][0]);getChapterImages(x["en"][0][1][0]["id"]).then(console.log) } )})
 
