@@ -124,7 +124,7 @@ function formatContent(rawData)
   
   var authorArtist = []
   var tags = []
-  var imageURL = `https://mangadex.org/covers/${rawData['id']}`
+  var imageURL = `https://uploads.mangadex.org/covers/${rawData['id']}`
   // get Title
   var title = Object.entries(rawData['attributes']['title'])[0]
   if("en" in rawData['attributes']['title'])
