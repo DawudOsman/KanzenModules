@@ -6,7 +6,7 @@ function sleep(ms) {
 async function searchContent(input,page=0) {
   try{
 
-    const url = `${apiUrl}/manga?title=${input}&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag&offset=${page*10 }&limit=10`
+    const url = `${apiUrl}/manga?title=${input}&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag&offset=${page*50 }&limit=50`
     const response = await fetch(url)
     const json = await response.json()
     const rawArray = json['data']
