@@ -6,13 +6,13 @@ function sleep(ms) {
 async function searchContent(input,page=0) {
   try{
 
-    const url = `${apiUrl}/manga?title=${input}&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag&offset=${page*50 }&limit=50`
+    const url = `${apiUrl}/manga?title=${input}&includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag&offset=${page*10 }`
     const response = await fetch(url)
     const json = await response.json()
     const rawArray = json['data']
     
     
-    const formattedArray = rawArray.map((x)=>{return formatContent(x)})
+    const formattedArray = rawArray.map((x)=>{ const formattedJson =  formatContent(x); return {'title':formattedJson['title'],'id': formattedJson['id'],'imageURL':formattedJson['imageURL']}})
        
     return formattedArray
   }
@@ -23,11 +23,17 @@ async function searchContent(input,page=0) {
 
     
 }
-async function getContentData(href) {
+async function getContentData(id) {
 
   try{
-    return href
-  }
+     const url = `https://api.mangadex.org/manga/${id}?includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag`
+     const response = await fetch(url)
+     const json = await response.json()
+     const rawData = json["data"]
+     const formattedData = formatContent(rawData)
+     return formattedData
+    }
+
     catch (err)
   {
     return {'Error': err.message}
@@ -72,7 +78,7 @@ async function getChapters(input) {
                     }
                 }
                 
-              chapters[x['attributes']['translatedLanguage']][x['attributes']['chapter']].push({'id':x['id'],'scanlation_group':translationGroup})
+              chapters[x['attributes']['translatedLanguage']][x['attributes']['chapter']].push({'id':x['id'],'scanlation_group':translationGroup,'volume':x['attributes']['volume'],'chapter':x['attributes']['chapter'],'title':x['attributes']['title'] })
           
         
         
@@ -119,12 +125,15 @@ async function getChapterImages(input)
   }
 }
 // util Functions
+
+
+
 function formatContent(rawData)
 {
   
   var authorArtist = []
   var tags = []
-  var imageURL = `https://uploads.mangadex.org/covers/${rawData['id']}`
+  var imageURL = `https://mangadex.org/covers/${rawData['id']}`
   // get Title
   var title = Object.entries(rawData['attributes']['title'])[0]
   if("en" in rawData['attributes']['title'])
@@ -174,9 +183,9 @@ function formatContent(rawData)
 
    
 
-    const id = {'id':rawData['id'],'description':description,'authorArtist':authorArtist,'tags':tags}
-    return {'title':title,'params':id,'imageURL':imageURL}
+    const obj = {'title':title,'imageUrl': imageURL,'id':rawData['id'],'description':description,'authorArtist':authorArtist,'tags':tags}
+    return obj
 
 }
-//searchContent("shamo").then((x) => {console.log(x);getChapters(x[0]['params']).then(x => {console.log(x["en"][0][1][0]);getChapterImages(x["en"][0][1][0]["id"]).then(console.log) } )})
-
+//searchContent("usogui").then((x) => {console.log(x);getChapters(x[0]['id']).then(x => {console.log(JSON.stringify(x["en"]))  } )})
+//searchContent("usogui").then((x) => {console.log(x); getContentData(x[0]['id']).then(x => {console.log(x)})})
