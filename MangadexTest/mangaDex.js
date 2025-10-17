@@ -29,7 +29,10 @@ async function getContentData(id) {
      const url = `https://api.mangadex.org/manga/${id}?includes[]=cover_art&includes[]=author&includes[]=artist&includes[]=creator&includes[]=tag`
      const response = await fetch(url)
      const json = await response.json()
+      print(json)
      const rawData = json["data"]
+      print("rawData is")
+      print(rawData)
      const formattedData = formatContent(rawData)
      return formattedData
     }
