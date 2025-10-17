@@ -183,7 +183,7 @@ function formatContent(rawData)
 
    
 
-    const obj = {'title':title,'imageUrl': imageURL,'id':rawData['id'],'description':description,'authorArtist':authorArtist,'tags':tags}
+    const obj = {'title':title,'imageURL': imageURL,'id':rawData['id'],'description':description,'authorArtist':authorArtist,'tags':tags}
     return obj
 
 }
