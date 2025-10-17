@@ -44,7 +44,7 @@ async function getContentData(id) {
   
 }
 async function getChapters(input) {
-  var id = input['id']
+  var id = input
   var offset = 0
   var limit = 100
 
