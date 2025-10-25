@@ -42,6 +42,73 @@ function parsesearchText(input){
 }
 
 
+async function getContentData(id)
+{
+  try {
+      const url = `${baseUrl}/${id}`
+  const response = await fetch(url)
+  const text = await response.text()
+  const dom = KanzenBundle.htmlparser2.parseDocument(text)
+  return parseContentData(dom)
+  } catch (error) {
+        return {'Error': err.message}
+  }
+
+  
+ 
+}
+
+function parseContentData(dom)
+{
+     contentObj = {}
+     authorArtist = []
+     genres = []
+     // description
+     try{
+        const descriptionNode = KanzenBundle.cssSelect.selectOne("span.font-medium.text-sm",dom)
+        const description = getText(descriptionNode)
+        contentObj['description'] = description
+     }catch(e){console.log(`Error fetching description: ${e}`)}
+     // author
+     try{
+        const parentDiv = KanzenBundle.cssSelect.selectAll("div:has(h3)", dom);
+        const filteredDiv =  parentDiv.filter(div => {
+          const h3s = div.children.filter(c => c.type === "tag" && c.name === "h3");
+          if (h3s.length === 0) return false;
+          const firstH3Text = getText(h3s[0]).trim();
+          return (firstH3Text.includes("Artist") || firstH3Text.includes("Author") ); // containsOwn equivalent
+        });
+        const result = filteredDiv.map(div => {
+            const h3s = div.children.filter(c => c.type === "tag" && c.name === "h3");
+            return h3s[1] ? getText(h3s[1]).trim() : null;
+          }).filter(Boolean);
+        if (result.length > 0)
+          {
+             contentObj["authorArtist"] = result
+          }
+
+     }catch(e){console.log(`Error fetching author/artist: ${e}`)}
+     // genre
+     try {
+       const genreNodes = KanzenBundle.cssSelect.selectAll("div[class^=space] > div.flex > button.text-white",dom)
+       for(genreNode of genreNodes)
+        {
+          const genre = getText(genreNode)
+          genres.push(genre)
+        }
+     } catch (e) {console.log(`Error fetching Genres: ${e}`)}
+
+    if(genres.length > 0)
+      {
+        contentObj["tags"] = genres
+      }
+     return contentObj
+
+}
+
+// util Functions
+
+
 function getText(node) {
   if (!node) return "";
   if (node.type === "text") return node.data;
@@ -52,4 +119,4 @@ function getText(node) {
 }
 
 // test
-//searchContent("a").then(console.log)
+//searchContent("a").then(x => { console.log(x[0]) ;getContentData(x[0]["id"]).then(console.log)   })
