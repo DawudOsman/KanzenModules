@@ -1,11 +1,10 @@
-
-
 // KanzenBundle.htmlparse2
 // KanzenBundle.cssSelect
 const apiUrl = "https://gg.asuracomic.net/api"
 const baseUrl = "https://asuracomic.net"
 const DEFAULT_HEADERS =  {
   "Content-Type": "application/json",
+  "Referer": `${baseUrl}/`
 };
 async function searchContent(input,page=0){
   try{
@@ -50,6 +49,25 @@ async function  getChapters(id) {
   return chapters 
   } catch (err) {
      return {'Error': err.message}
+  }
+}
+
+async function getChapterImages(id)
+{
+  try {
+              const url = `${baseUrl}/series/${id}`
+              console.log(url)
+  const response = await fetch(url,DEFAULT_HEADERS)
+  var text = await response.text()
+   //text = text.replace('"])<\/script><script>self.__next_f.push([1,"', '')
+  const dom = KanzenBundle.htmlparser2.parseDocument(text)
+ //console.log(text)
+  const imgArr = parseChapterImages(dom)
+  return imgArr
+  
+  } catch (e) {
+     console.log(e.message)
+    return []
   }
 }
 
@@ -157,6 +175,49 @@ function parsecontentChapters(dom){
    return chapters
 }
 
+function parseChapterImages(dom)
+{
+  try {
+    const PageRegex = /\\"pages\\":(\[.*?\])/;
+    const scripts = KanzenBundle.cssSelect.selectAll("script", dom)
+// Filter those that contain "self.__next_f.push"
+const matchedScripts = scripts.filter(node =>
+  node.children.some(
+    c => c.type === "text" && c.data.includes("self.__next_f.push")
+  )
+);
+
+// Extract their inner text, then get substring between first and last quote
+const scriptData = matchedScripts
+  .map(node => {
+    const textNode = node.children.find(c => c.type === "text");
+    if (!textNode) return "";
+    const data = textNode.data;
+
+    // mimic Kotlin's substringAfter("\"").substringBeforeLast("\"")
+    const firstQuote = data.indexOf('"');
+    const lastQuote = data.lastIndexOf('"');
+    if (firstQuote === -1 || lastQuote === -1 || lastQuote <= firstQuote) return "";
+    return data.slice(firstQuote + 1, lastQuote);
+  })
+  .join("");
+
+const regex = /\\"pages\\":(\[.*?\])/;
+const match = scriptData.match(regex);
+
+if (match) {
+  //console.log("✅ Captured pages array (escaped):", match[1]);
+  // Unescape and parse JSON
+  const jsonString = match[1].replace(/\\"/g, '"');
+  const pages = JSON.parse(jsonString);
+  return pages.map(x=>{return x["url"]})
+  console.log("✅ Parsed pages:", pages);
+} else {
+  console.log("❌ No match found");
+}
+  } catch (e) {console.log(`Error fetching Images through 1st method: ${e}`)}
+}
+
 function getText(node) {
   if (!node) return "";
   if (node.type === "text") return node.data;
@@ -168,4 +229,4 @@ function getText(node) {
 
 // test
 //searchContent("a").then(x => { console.log(x[0]) ;getContentData(x[0]["id"]).then(console.log)   })
-//searchContent("a").then(x => { console.log(x[0]) ;getChapters(x[0]["id"]).then(console.log)   })
+//searchContent("a").then(x => { console.log(x[0]) ;getChapters(x[0]["id"]).then(x => { getChapterImages(x["en"][0][1][0]["id"])})   })
