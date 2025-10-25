@@ -1,4 +1,5 @@
 
+
 // KanzenBundle.htmlparse2
 // KanzenBundle.cssSelect
 const apiUrl = "https://gg.asuracomic.net/api"
@@ -19,6 +20,40 @@ async function searchContent(input,page=0){
 
      
 }
+
+async function getContentData(id)
+{
+  try {
+      const url = `${baseUrl}/${id}`
+  const response = await fetch(url)
+  const text = await response.text()
+  const dom = KanzenBundle.htmlparser2.parseDocument(text)
+  return parseContentData(dom)
+  } catch (error) {
+        return {'Error': err.message}
+  }
+
+  
+ 
+}
+
+
+
+
+async function  getChapters(id) {
+  try {
+          const url = `${baseUrl}/${id}`
+  const response = await fetch(url)
+  const text = await response.text()
+  const dom = KanzenBundle.htmlparser2.parseDocument(text)
+  const chapters = parsecontentChapters(dom)
+  return chapters 
+  } catch (err) {
+     return {'Error': err.message}
+  }
+}
+
+// util Functions
 function parsesearchText(input){
   const dom =  KanzenBundle.htmlparser2.parseDocument(input);
   const links = KanzenBundle.cssSelect.selectAll("div.grid > a[href]", dom)
@@ -39,23 +74,6 @@ function parsesearchText(input){
          arr.push({'title':title,'id': href,'imageURL': cover})
     }
     return arr
-}
-
-
-async function getContentData(id)
-{
-  try {
-      const url = `${baseUrl}/${id}`
-  const response = await fetch(url)
-  const text = await response.text()
-  const dom = KanzenBundle.htmlparser2.parseDocument(text)
-  return parseContentData(dom)
-  } catch (error) {
-        return {'Error': err.message}
-  }
-
-  
- 
 }
 
 function parseContentData(dom)
@@ -106,8 +124,38 @@ function parseContentData(dom)
 
 }
 
-// util Functions
+function parsecontentChapters(dom){
+   var chaptersNode = KanzenBundle.cssSelect.selectAll("div.scrollbar-thumb-themecolor > div.group",dom)
+   const chapters = {}
+   const chapterArr = {}
+   console.log("Chapter length is")
+   console.log(chaptersNode.length)
+   chaptersNode = chaptersNode.reverse()
+   for(let x = 0; x < chaptersNode.length; x = x + 1){
+    
+    chapterNode = chaptersNode[x]
+    chapterObj = {}
+    try {
+          const urlNode = KanzenBundle.cssSelect.selectOne("a",chapterNode)
+          const url = urlNode?.attribs?.href
+          chapterObj["id"] = url
+          // title
+          const textNode = KanzenBundle.cssSelect.selectOne("h3.text-sm", chapterNode)
+          const text = getText(textNode)
 
+          chapterObj["title"] = text
+          chapterObj["chapter"] = x+1
+          chapterArr[x+1] = [chapterObj]
+    } catch (err) {console.log(`error fetching chapter: ${err}`)}
+   }
+   chapters["en"] = chapterArr
+     for (const key in chapters)
+    {
+      chapters[key] = Object.entries(chapters[key])
+  .sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]));
+    }
+   return chapters
+}
 
 function getText(node) {
   if (!node) return "";
@@ -120,3 +168,4 @@ function getText(node) {
 
 // test
 //searchContent("a").then(x => { console.log(x[0]) ;getContentData(x[0]["id"]).then(console.log)   })
+//searchContent("a").then(x => { console.log(x[0]) ;getChapters(x[0]["id"]).then(console.log)   })
