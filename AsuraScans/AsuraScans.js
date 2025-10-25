@@ -1,3 +1,4 @@
+
 // KanzenBundle.htmlparse2
 // KanzenBundle.cssSelect
 const apiUrl = "https://gg.asuracomic.net/api"
@@ -163,6 +164,7 @@ function parsecontentChapters(dom){
 
           chapterObj["title"] = text
           chapterObj["chapter"] = x+1
+          chapterObj['scanlation_group'] = "undefined"
           chapterArr[x+1] = [chapterObj]
     } catch (err) {console.log(`error fetching chapter: ${err}`)}
    }
@@ -229,4 +231,4 @@ function getText(node) {
 
 // test
 //searchContent("a").then(x => { console.log(x[0]) ;getContentData(x[0]["id"]).then(console.log)   })
-//searchContent("a").then(x => { console.log(x[0]) ;getChapters(x[0]["id"]).then(x => { getChapterImages(x["en"][0][1][0]["id"])})   })
+//searchContent("a").then(x => { console.log(x[0]) ;getChapters(x[0]["id"]).then(x => { getChapterImages(x["en"][0][1][0]["id"]).then(console.log)})   })
