@@ -56,7 +56,7 @@ async function getChapterImages(id) {
     const url = `${apiUrl}/api/chapter?chapterId=${id}`
     const response = await fetch(url)
     const json = await response.json()
-    return json['chapter']['images'].map(x=>{ return x['id']})
+   return json['chapter']['images'].map(x=>{ return x['url']})
     
   } catch (error) {console.log(`error fetching images ${id}`)}
 }
