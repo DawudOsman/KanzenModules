@@ -1,0 +1,11 @@
+{
+  "sourceName": "MangaDex",
+  "iconURL":  "https://storage.hivetoon.com/public/upload/2024/12/05/logo-end-1%20(1)-09f57d7d7ea3f031.webp",
+  "version": "1.0",
+  "language": "English",
+  "scriptURL":"https://raw.githubusercontent.com/DawudOsman/KanzenModules/main/HiveToons/hivetoon.js",
+  "author":{
+    "name":"Churly",
+    "iconURL":"https://i.pinimg.com/236x/90/2c/ea/902ceaa5610ef7f8f81c2f3881799f2c.jpg"
+  }
+}
