@@ -116,7 +116,7 @@ function parseChapters(dom){
             const text = getText(titleNode[0])
             //console.log(text)
             const href = chapterNodes[x].attribs?.href ?? "";
-            chapterData = {"id":href,"SCANLANTION GROUP":"Weeb Central","Title":text}
+            chapterData = {"id":href,"scanlation_group":"Weeb Central","title":text}
             
             chapters.push([chapterData])
             //console.log([(chapterNodes.length - x),chapterData])
