@@ -1,0 +1,11 @@
+{
+  "sourceName": "WeebCentral",
+  "iconURL":  "https://weebcentral.com/static/images/og_image.png",
+  "version": "1.0",
+  "language": "English",
+  "scriptURL":"https://raw.githubusercontent.com/DawudOsman/KanzenModules/refs/heads/main/WeebCentral/weebCentral.js",
+  "author":{
+    "name":"Churly",
+    "iconURL":"https://i.pinimg.com/236x/90/2c/ea/902ceaa5610ef7f8f81c2f3881799f2c.jpg"
+  }
+}

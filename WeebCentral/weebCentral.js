@@ -1,29 +1,4 @@
 
-const fs = require('fs');
-const vm = require('vm');
-const path = require('path');
-const { url } = require('inspector');
-const { get } = require('http');
-// ✅ Use __dirname to always resolve the correct path
-const bundlePath = path.join(__dirname, 'bundle.js');
-
-// Check if it exists (optional safety)
-if (!fs.existsSync(bundlePath)) {
-  console.error('bundle.js not found at:', bundlePath);
-  process.exit(1);
-}
-
-const code = fs.readFileSync(bundlePath, 'utf8');
-
-const sandbox = {};
-sandbox.global = sandbox;
-sandbox.globalThis = sandbox;
-sandbox.KanzenBundle = undefined;
-
-vm.createContext(sandbox);
-vm.runInContext(code, sandbox);
-
-const KanzenBundle = sandbox.KanzenBundle;
 // KanzenBundle.htmlparse2
 // KanzenBundle.cssSelect
 const baseUrl = `https://weebcentral.com`
